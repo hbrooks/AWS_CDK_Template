@@ -2,11 +2,11 @@
 version: '3'
 services:
 
-  ms_main:
-    container_name: ms_main
+  api_aws:
+    container_name: api_aws
     build:
       context: .
-      dockerfile: ./ms_main/Dockerfile
+      dockerfile: ./api_aws/Dockerfile
     command:
       - "uvicorn"
       - "app:my_app"
@@ -20,46 +20,14 @@ services:
     environment:
       MS_ORGANIZATIONS_API: '127.0.0.1:9001'
     volumes:
-      - ./ms_main/src/app.py:/usr/src/ms_main/src/app.py
-      - ./ms_main/src/__init__.py:/usr/src/ms_main/src/__init__.py
+      - ./api_aws/src/app.py:/usr/src/api_aws/src/app.py
+      - ./api_aws/src/__init__.py:/usr/src/api_aws/src/__init__.py
       - ./scripts/create_zappa_package.sh:/usr/src/scripts/create_zappa_package.sh # Needed to deploy.
-      - ./ms_main/zappa_settings.json:/usr/src/ms_main/zappa_settings.json # Needed to deploy.
+      - ./api_aws/zappa_settings.json:/usr/src/api_aws/zappa_settings.json # Needed to deploy.
     healthcheck:
       test:
         - "CMD"
         - "curl"
         - "http://localhost:8000/internal/ping"
-      interval: 3s
-      timeout: 1s
-    depends_on:
-      - ms_organizations
-
-  ms_organizations:
-    container_name: ms_organizations
-    build:
-      context: .
-      dockerfile: ./ms_organizations/Dockerfile
-    command:
-      - "uvicorn"
-      - "app:my_app"
-      - "--reload"
-      - "--host"
-      - "0.0.0.0" # Makes container's port accessable from host running Docker.
-      - "--port"
-      - "9001"
-    ports:
-      - 9001:9001
-    environment:
-      QLDB_NAME: "Baton-beta-db"
-    volumes:
-      - ./ms_organizations/src/app.py:/usr/src/ms_organizations/src/app.py
-      - ./ms_organizations/src/__init__.py:/usr/src/ms_organizations/src/__init__.py
-      - ./scripts/create_zappa_package.sh:/usr/src/scripts/create_zappa_package.sh # Needed to deploy.
-      - ./ms_organizations/zappa_settings.json:/usr/src/ms_organizations/zappa_settings.json # Needed to deploy.
-    healthcheck:
-      test:
-        - "CMD"
-        - "curl"
-        - "http://localhost:9001/internal/ping"
       interval: 3s
       timeout: 1s
