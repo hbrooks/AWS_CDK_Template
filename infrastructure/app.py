@@ -2,10 +2,10 @@
 
 from aws_cdk import core
 
-from cdk_src.all import BatonStack
+from cdk_src.all import ApiAwsStack
 
 
 app = core.App()
-BatonStack(app, "beta", env={'region': 'us-east-1'})
+ApiAwsStack(app, "beta", env={'region': 'us-east-1'})
 
 app.synth()

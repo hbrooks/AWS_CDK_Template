@@ -6,62 +6,32 @@ import aws_cdk.aws_qldb as aws_qldb
 import aws_cdk.aws_iam as aws_iam
 
 
-class BatonStack(core.Stack):
+class ApiAwsStack(core.Stack):
 
-    STACK_NAME_PREFIX = "Baton"
+    STACK_NAME_PREFIX = "ApiAwsStack"
 
     def __init__(self, scope: core.Construct, disambiguator: str, **kwargs) -> None:
         super().__init__(
             scope, '-'.join([self.STACK_NAME_PREFIX, disambiguator]), **kwargs)
 
-        qldb = aws_qldb.CfnLedger(
+        api_aws_lambda = aws_lambda.Function(
             self,
-            '-'.join([self.STACK_NAME_PREFIX, disambiguator, 'db']),
-            permissions_mode="ALLOW_ALL",
-            deletion_protection=False, # TODO: Use `isProd`-like functionality here.
-            name = '-'.join([self.STACK_NAME_PREFIX, disambiguator, 'db']),
-        )
-
-        ms_organizations = aws_lambda.Function(
-            self,
-            '-'.join([self.STACK_NAME_PREFIX, disambiguator, 'ms_organizations']),
+            '-'.join([self.STACK_NAME_PREFIX, disambiguator, 'api_aws']),
             description="Created by CDK.  Don't modify manually!",
             runtime=aws_lambda.Runtime.PYTHON_3_6,
-            code=aws_lambda.Code.asset('../ms_organizations/zappa_package.zip'),
+            code=aws_lambda.Code.asset('../api_aws/zappa_package.zip'),
             handler='src.lambda_handler',
             environment={
-                'QLDB_NAME': qldb.name
             },
             function_name='-'.join([self.STACK_NAME_PREFIX,
-                                    disambiguator, 'ms_organizations']),
+                                    disambiguator, 'api_aws']),
             memory_size=128,
             reserved_concurrent_executions=10,
             timeout=core.Duration.seconds(10),
         )
-        ms_organizations_rest_api = self.create_API_GW_integration(disambiguator, ms_organizations, 'ms_organizations')
-        ms_organizations.role.add_to_policy(aws_iam.PolicyStatement(
-            resources=[f"arn:aws:qldb:{self.region}:{self.account}:ledger/{qldb.name}"],
-            actions=["qldb:SendCommand"]
-        ))
+        api_aws_rest_api = self.create_API_GW_integration(disambiguator, api_aws_lambda, 'api_aws')
+       
 
-        ms_main = aws_lambda.Function(
-            self,
-            '-'.join([self.STACK_NAME_PREFIX, disambiguator, 'ms_main']),
-            description="Created by CDK.  Don't modify manually!",
-            runtime=aws_lambda.Runtime.PYTHON_3_6,
-            code=aws_lambda.Code.asset('../ms_main/zappa_package.zip'),
-            handler='src.lambda_handler',
-            environment={
-                'MS_ORGANIZATIONS_API': ms_organizations_rest_api.url
-            },
-            function_name='-'.join([self.STACK_NAME_PREFIX,
-                                    disambiguator, 'ms_main']),
-            memory_size=128,
-            reserved_concurrent_executions=10,
-            timeout=core.Duration.seconds(10),
-        )
-        self.create_API_GW_integration(disambiguator, ms_main, 'ms_main')
-        
 
     def create_API_GW_integration(self, disambiguator: str, lambda_function: aws_lambda.Function, function_name: str) -> apigateway.RestApi:
         lambda_integration = apigateway.LambdaIntegration(lambda_function)

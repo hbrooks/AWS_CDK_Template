@@ -4,7 +4,6 @@ import os
 from fastapi import FastAPI
 from mangum import Mangum
 from starlette.requests import Request
-from pyqldb.driver.qldb_driver import QldbDriver
 
 
 my_app = FastAPI()
@@ -14,9 +13,9 @@ my_app = FastAPI()
 async def get_root(request: Request):
     try:
         config = {} 
-        return {"message": "pong", 'config': config}
+        return {'is_healthy': True, 'config': config}
     except:
-        return {'message': 'bad'}
+        return {'is_healthy': False}
 
 
 lambda_handler = Mangum(app=my_app)
