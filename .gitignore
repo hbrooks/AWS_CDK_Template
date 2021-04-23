@@ -24,4 +24,4 @@ infrastructure/.venv
 cdk.out/
 
 # Zappa artifacts
-ms_main/*.zip
+*.zip
