@@ -6,8 +6,7 @@
 3.  Start the services via `./scripts/start.sh`.  `localhost:8000/docs` should show the API schema.
 
 ### How to Deploy
-From root of repo:
+1.  From root of repo:
 2.  `./scripts/build_images.sh`
 3.  `./scripts/start_containers.sh`
 4.  `./scripts/deploy.sh`
-
