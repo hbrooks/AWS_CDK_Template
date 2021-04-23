@@ -1,0 +1,8 @@
+{
+  "dev": {
+    "profile_name": "default",
+    "runtime": "python3.6",
+    "touch_path": "/internal/healthCheck",
+    "log_level": "INFO"
+  }
+}
