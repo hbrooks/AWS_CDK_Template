@@ -1,3 +1,3 @@
 ./scripts/clean.sh
-./scripts/create_lambda_deployment_artifacts.sh
-./scripts/cdk_deploy.sh
+source ./scripts/create_lambda_deployment_artifact.sh; create_lambda_deployment_artifact api_aws
+./scripts/deploy_infra.sh

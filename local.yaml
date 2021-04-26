@@ -2,7 +2,7 @@
 version: '3'
 services:
 
-  api_aws:
+  api_aws: # This should match the name of a folder at the root of the repo.
     container_name: api_aws
     build:
       context: .

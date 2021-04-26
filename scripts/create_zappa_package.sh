@@ -1,4 +1,5 @@
 create_zappa_package () {
+    # Accepts the name of a service as the first and only argument.  
     rm -rf /usr/src/$1/zappa_venv/
     cd /usr/src/$1/
     pip3 install virtualenv
