@@ -27,6 +27,8 @@ jobs:
     #   run:
     #     working-directory: ./t
     steps:
+      - name: cd
+        run: cd $GITHUB_WORKSPACE
       # - name: CDK Synth
       #   uses: scottbrenner/aws-cdk-action@master
       #   with:
