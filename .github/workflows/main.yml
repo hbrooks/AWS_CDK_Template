@@ -11,48 +11,45 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# From the very helpful: https://johntipper.org/integrating-aws-cdk-into-github-actions/
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - name: cd
-        run: cd $GITHUB_WORKSPACE
-      - name: pwd
-        run: pwd
-      # - name: CDK Synth
-      #   uses: scottbrenner/aws-cdk-action@master
-      #   with:
-      #     args: synth
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      # - name: CDK Deploy
-      #   uses: scottbrenner/aws-cdk-action@master
-      #   with:
-      #     args: synth
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: cdk synth
-        uses: youyo/aws-cdk-github-actions@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
         with:
-          cdk_subcommand: 'synth --verbose'
-          cdk_version: '1.98.0'
+          node-version: '14.x'
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
+      - name: Install CDK and Gatsby
+        run: |
+          npm install -g aws-cdk@1.98.0 gatsby-cli
+      
+      - name: Synth CDK
+        run: |
+          cdk synth \
+          --output build/cdk.out
         env:
+          AWS_REGION: us-east-1
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: 'us-east-1'   
-          
-      - name: cdk deploy
-        uses: youyo/aws-cdk-github-actions@v2
-        with:
-          cdk_subcommand: 'deploy --verbose'
-          cdk_stack: '*'
-          cdk_args: '--require-approval never'
-          actions_comment: true
+          # AWS_TARGET_ACCOUNT: ${{ secrets.AWS_TARGET_ACCOUNT }}
+
+      - name: Deploy CDK
+        run: |
+          cdk deploy --app ./build/cdk.out --require-approval never "*"
+        if: github.ref == 'refs/heads/master'
         env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: 'us-east-1'
