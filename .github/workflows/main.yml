@@ -22,10 +22,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
   deploy:
-    env:
-      working-directory: './infrastructure'
     runs-on: ubuntu-latest
     steps:
+    
+      - name: cd
+        run: cd infrastructure/
         
       - name: cdk synth
         uses: youyo/aws-cdk-github-actions@v2
