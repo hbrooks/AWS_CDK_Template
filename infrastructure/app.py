@@ -2,10 +2,10 @@
 
 from aws_cdk import core
 
-from cdk_src.all import ApiAwsStack
+from cdk_src.all import ExampleAwsStack
 
 
 app = core.App()
-ApiAwsStack(app, "beta", env={'region': 'us-east-1'})
+ExampleAwsStack(app, "beta", env={'region': 'us-east-1'})
 
 app.synth()

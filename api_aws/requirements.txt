@@ -1,3 +1,0 @@
-mangum
-fastapi[all]
-starlette

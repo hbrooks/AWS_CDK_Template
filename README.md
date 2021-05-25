@@ -1,3 +1,5 @@
+All of this is out of date.
+
 ## Template for building FastAPI Services on AWS
 - Use `./scripts/build_images.sh` to create a Docker image of a Python service (running FastAPI)
 - Use `./scripts/start_containers.sh` to start the service on your local (using docker-compose)
