@@ -26,25 +26,12 @@ jobs:
       - name: NPM Install
         run: npm install
 
-      # - name: Install
-      #   run: apk --update --no-cache add nodejs nodejs-npm python3 py3-pip jq curl bash git docker && ln -sf /usr/bin/python3 /usr/bin/python
-
-      # - name: Cache Node.js modules
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: ~/.npm
-      #     key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-      #     restore-keys: |
-      #       ${{ runner.OS }}-node-
-      #       ${{ runner.OS }}-
-
-      - name: Install CDK
-        run: npm install -g aws-cdk@1.98.0  #gatsby-cli ts-node
+      # - name: Install CDK
+      #   run: npm install -g aws-cdk@1.98.0 
       
       - name: Synth CDK
         run: |
           cdk synth \
-          --app='npx ts-node --prefer-ts-exts bin/t.ts' \
           --output build/cdk.out
         env:
           AWS_REGION: us-east-1
