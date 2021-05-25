@@ -23,8 +23,11 @@ jobs:
         with:
           node-version: '14.x'
 
-      - name: Install
-        run: apk --update --no-cache add nodejs nodejs-npm python3 py3-pip jq curl bash git docker && ln -sf /usr/bin/python3 /usr/bin/python
+      - name: NPM Install
+        run: npm install
+
+      # - name: Install
+      #   run: apk --update --no-cache add nodejs nodejs-npm python3 py3-pip jq curl bash git docker && ln -sf /usr/bin/python3 /usr/bin/python
 
       # - name: Cache Node.js modules
       #   uses: actions/cache@v2
@@ -35,9 +38,8 @@ jobs:
       #       ${{ runner.OS }}-node-
       #       ${{ runner.OS }}-
 
-      - name: Install CDK and Gatsby
-        run: |
-          npm install -g aws-cdk@1.98.0 gatsby-cli ts-node
+      - name: Install CDK
+        run: npm install -g aws-cdk@1.98.0  #gatsby-cli ts-node
       
       - name: Synth CDK
         run: |
