@@ -23,12 +23,7 @@ jobs:
       - uses: actions/checkout@v2
   deploy:
     runs-on: ubuntu-latest
-#     defaults:
-#       run:
-#         working-directory: infrastructure
     steps:
-      - name: pwd
-        run: pwd
       - name: cdk synth
         uses: youyo/aws-cdk-github-actions@v2
         with:
