@@ -31,13 +31,14 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
+
       - name: Install CDK and Gatsby
         run: |
           npm install -g aws-cdk@1.98.0 gatsby-cli
       
       - name: Synth CDK
         run: |
-          ~/.npm/.bin/cdk synth \
+          cdk synth \
           --app='npx ts-node --prefer-ts-exts bin/t.ts' \
           --output build/cdk.out
         env:
@@ -47,7 +48,7 @@ jobs:
 
       - name: Deploy CDK
         run: |
-          ~/.npm/.bin/cdk deploy --app ./build/cdk.out --require-approval never "*"
+          cdk deploy --app ./build/cdk.out --require-approval never "*"
         if: github.ref == 'refs/heads/master'
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
