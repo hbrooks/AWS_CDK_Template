@@ -1,3 +1,0 @@
-# The CDK requirements are listed in setup.py.  Edit that, then `pip install -r requirements.txt` to add a new dependency. 
--e .
-pytest==6.2.1 # Required for CDK unit tests.  
