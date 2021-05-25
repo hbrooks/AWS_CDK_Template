@@ -24,9 +24,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     defaults:
-      working-directory: scripts
+      run:
+        working-directory: infrastructure
     steps:
-        
       - name: cdk synth
         uses: youyo/aws-cdk-github-actions@v2
         with:
