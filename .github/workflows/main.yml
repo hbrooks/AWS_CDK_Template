@@ -33,21 +33,21 @@ jobs:
             ${{ runner.OS }}-
       - name: Install CDK and Gatsby
         run: |
-          npm install -g aws-cdk@1.98.0 gatsby-cli typscript
+          npm install -g aws-cdk@1.98.0 gatsby-cli
       
       - name: Synth CDK
         run: |
-          node_modules/.bin/cdk synth \
+          ~/.npm/.bin/cdk synth \
+          --app='npx ts-node --prefer-ts-exts bin/t.ts' \
           --output build/cdk.out
         env:
           AWS_REGION: us-east-1
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # AWS_TARGET_ACCOUNT: ${{ secrets.AWS_TARGET_ACCOUNT }}
 
       - name: Deploy CDK
         run: |
-          node_modules/.bin/cdk deploy --app ./build/cdk.out --require-approval never "*"
+          ~/.npm/.bin/cdk deploy --app ./build/cdk.out --require-approval never "*"
         if: github.ref == 'refs/heads/master'
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
