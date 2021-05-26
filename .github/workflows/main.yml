@@ -26,8 +26,8 @@ jobs:
       - name: NPM Install
         run: npm install
 
-      # - name: Install CDK
-      #   run: npm install -g aws-cdk@1.98.0 
+      - name: Install CDK
+        run: npm install -g aws-cdk@1.98.0 
       
       - name: Synth CDK
         run: |
