@@ -39,5 +39,10 @@ export class ExampleStack extends cdk.Stack {
     });
 
     api.root.addMethod("GET", lambdaIntegration); // GET /
+
+    new cdk.CfnOutput(this, "SetOutput", {
+      value: api.url,
+      exportName: "MyExampleRestApiUrl",
+    });
   }
 }
